@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>NEW HORIZON English Course3</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
   <style>
     html, body {
       margin:0; padding:0; height:100vh; overflow:hidden;
@@ -160,7 +162,6 @@
 </head>
 <body>
 
-<!-- 左サイドバー -->
 <div class="sideButtons left">
   <button id="tocBtnLeft">目次</button>
   <button id="prevBtnLeft">前へ</button>
@@ -174,7 +175,6 @@
   </div>
 </div>
 
-<!-- 右サイドバー -->
 <div class="sideButtons right">
   <button id="tocBtnRight">目次</button>
   <button id="prevBtnRight">前へ</button>
@@ -188,21 +188,18 @@
   </div>
 </div>
 
-<!-- メインコンテンツ -->
 <div id="content">
   <img id="pageImage" src="pages/1.png" alt="ページ画像" />
   <iframe id="pageIframe"></iframe>
   <button id="iframeCloseBtn">✕</button>
 </div>
 
-<!-- 目次コンテナ -->
 <div id="tocContainer">
   <canvas id="tocCanvas" width="250" height="40"></canvas>
   <div id="tocButtons"></div>
 </div>
 
 <script>
-  // 定数・状態変数
   const totalPages = 200;
   let currentPage = 1;
   let tocVisible = false;
@@ -214,7 +211,6 @@
   let startX = 0, startY = 0;
   let clickHighlight = false;
 
-  // 要素取得
   const pageImage = document.getElementById('pageImage');
   const pageIframe = document.getElementById('pageIframe');
   const iframeCloseBtn = document.getElementById('iframeCloseBtn');
@@ -224,7 +220,6 @@
   const tocButtons = document.getElementById('tocButtons');
   const ctx = tocCanvas.getContext('2d');
 
-  // 目次データ
   const tocItems = {
     page: Array.from({length: totalPages}, (_, i) => ({ title: `ページ ${i + 1}`, page: i + 1 })),
     content: [
@@ -244,7 +239,6 @@
     ]
   };
 
-  // ページ更新関数
   function updatePage(p) {
     closeIframe();
     currentPage = Math.max(1, Math.min(p, totalPages));
@@ -253,7 +247,6 @@
     applyZoom();
   }
 
-  // iframe開閉関数
   function openIframe(url) {
     pageIframe.src = url;
     pageIframe.style.display = 'block';
@@ -270,30 +263,27 @@
     contentDiv.classList.remove('iframe-visible');
   }
 
-  // 拡大縮小反映
   function applyZoom() {
     pageImage.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${currentZoom})`;
   }
+
   function zoomIn() {
     currentZoom += 0.2;
     applyZoom();
   }
+
   function zoomOut() {
     currentZoom = Math.max(0.2, currentZoom - 0.2);
-    // 画像が縮小したら位置もリセットしとく
-    if (currentZoom <= 1) {
-      offsetX = 0; offsetY = 0;
-    }
-    applyZoom();
-  }
-  function zoomReset() {
-    currentZoom = 1.0;
-    offsetX = 0;
-    offsetY = 0;
+    if (currentZoom <= 1) { offsetX = 0; offsetY = 0; }
     applyZoom();
   }
 
-  // クリックポイント切替＆URL更新
+  function zoomReset() {
+    currentZoom = 1.0;
+    offsetX = 0; offsetY = 0;
+    applyZoom();
+  }
+
   function toggleClickHighlight() {
     clickHighlight = !clickHighlight;
     const url = new URL(window.location);
@@ -301,7 +291,6 @@
     window.history.replaceState({}, '', url);
   }
 
-  // 目次タブ描画
   const tabs = ['ページ', 'コンテンツ', '動画'];
   function drawTabs() {
     ctx.clearRect(0, 0, tocCanvas.width, tocCanvas.height);
@@ -309,7 +298,6 @@
     ctx.font = 'bold 16px sans-serif';
     ctx.textBaseline = 'middle';
     ctx.textAlign = 'left';
-
     tabs.forEach((label, i) => {
       ctx.fillStyle = (tocMode === ['page','content','video'][i]) ? '#bbb' : '#eee';
       ctx.strokeStyle = '#999';
@@ -320,7 +308,6 @@
     });
   }
 
-  // 目次リスト描画
   function renderTocList() {
     tocButtons.innerHTML = '';
     const items = tocItems[tocMode];
@@ -336,7 +323,6 @@
     });
   }
 
-  // 目次表示切替
   function toggleToc(show = !tocVisible) {
     tocVisible = show;
     if (tocVisible) {
@@ -350,7 +336,6 @@
     }
   }
 
-  // 目次タブクリック
   tocCanvas.onclick = e => {
     const tabWidth = tocCanvas.width / tabs.length;
     const idx = Math.floor(e.offsetX / tabWidth);
@@ -359,7 +344,6 @@
     renderTocList();
   };
 
-  // ボタンイベント割当
   document.getElementById('tocBtnLeft').onclick = () => {
     tocPosition = 'left';
     toggleToc();
@@ -376,29 +360,22 @@
 
   iframeCloseBtn.onclick = () => closeIframe();
 
-  // 飛び出し表示切替
   function toggleFlyout(side) {
     const flyout = document.getElementById(side === 'left' ? 'flyoutLeft' : 'flyoutRight');
-    if (flyout.style.display === 'flex') {
-      flyout.style.display = 'none';
-    } else {
-      flyout.style.display = 'flex';
-    }
+    flyout.style.display = flyout.style.display === 'flex' ? 'none' : 'flex';
   }
   document.getElementById('moreLeft').onclick = () => toggleFlyout('left');
   document.getElementById('moreRight').onclick = () => toggleFlyout('right');
 
-  // 飛び出しボタン操作
-  document.getElementById('zoomInBtn').onclick = () => { zoomIn(); };
-  document.getElementById('zoomInBtn2').onclick = () => { zoomIn(); };
-  document.getElementById('zoomOutBtn').onclick = () => { zoomOut(); };
-  document.getElementById('zoomOutBtn2').onclick = () => { zoomOut(); };
-  document.getElementById('zoomResetBtn').onclick = () => { zoomReset(); };
-  document.getElementById('zoomResetBtn2').onclick = () => { zoomReset(); };
-  document.getElementById('clickToggleBtn').onclick = () => { toggleClickHighlight(); };
-  document.getElementById('clickToggleBtn2').onclick = () => { toggleClickHighlight(); };
+  document.getElementById('zoomInBtn').onclick = zoomIn;
+  document.getElementById('zoomInBtn2').onclick = zoomIn;
+  document.getElementById('zoomOutBtn').onclick = zoomOut;
+  document.getElementById('zoomOutBtn2').onclick = zoomOut;
+  document.getElementById('zoomResetBtn').onclick = zoomReset;
+  document.getElementById('zoomResetBtn2').onclick = zoomReset;
+  document.getElementById('clickToggleBtn').onclick = toggleClickHighlight;
+  document.getElementById('clickToggleBtn2').onclick = toggleClickHighlight;
 
-  // ドラッグで画像移動（拡大時のみ）
   pageImage.addEventListener('mousedown', e => {
     if (currentZoom <= 1) return;
     isDragging = true;
@@ -406,7 +383,7 @@
     startY = e.clientY - offsetY;
     pageImage.style.cursor = 'grabbing';
   });
-  window.addEventListener('mouseup', e => {
+  window.addEventListener('mouseup', () => {
     isDragging = false;
     pageImage.style.cursor = currentZoom > 1 ? 'grab' : 'default';
   });
@@ -417,7 +394,6 @@
     applyZoom();
   });
 
-  // タッチ操作（スマホ対応）
   pageImage.addEventListener('touchstart', e => {
     if (currentZoom <= 1) return;
     const touch = e.touches[0];
@@ -425,9 +401,7 @@
     startX = touch.clientX - offsetX;
     startY = touch.clientY - offsetY;
   });
-  window.addEventListener('touchend', e => {
-    isDragging = false;
-  });
+  window.addEventListener('touchend', () => { isDragging = false; });
   window.addEventListener('touchmove', e => {
     if (!isDragging) return;
     const touch = e.touches[0];
@@ -436,18 +410,11 @@
     applyZoom();
   });
 
-  // 初期ページ設定
   updatePage(currentPage);
 
-  // ページ読み込み時にURLのclick-areaクエリ反映（あれば）
   window.addEventListener('load', () => {
     const params = new URLSearchParams(window.location.search);
-    const clickAreaParam = params.get('click-area');
-    if (clickAreaParam === 'true') {
-      clickHighlight = true;
-    } else {
-      clickHighlight = false;
-    }
+    clickHighlight = params.get('click-area') === 'true';
   });
 </script>
 
