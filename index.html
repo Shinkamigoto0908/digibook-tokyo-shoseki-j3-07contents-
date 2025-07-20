@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NEW HORIZON English Course3</title>
+  <style>
+    html, body {
+      margin:0; padding:0; height:100vh; overflow:hidden;
+      font-family: sans-serif;
+      background: #fff;
+    }
+    .sideButtons.left, .sideButtons.right {
+      position: fixed;
+      top: 0; height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 50px;
+      padding: 10px 0;
+      background: #f0f0f0;
+      box-sizing: border-box;
+      z-index: 1000;
+      align-items: center;
+    }
+    .sideButtons.left {
+      left: 0;
+      border-right: 1px solid #ccc;
+    }
+    .sideButtons.right {
+      right: 0;
+      border-left: 1px solid #ccc;
+    }
+    .flyoutButtons {
+      position: absolute;
+      top: 140px;
+      display: none;
+      flex-direction: row;
+      background: #f9f9f9;
+      border: 1px solid #ccc;
+      padding: 4px;
+      gap: 4px;
+      z-index: 1100;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .sideButtons.left .flyoutButtons {
+      left: 50px;
+    }
+    .sideButtons.right .flyoutButtons {
+      right: 50px;
+    }
+    button {
+      width: 45px;
+      height: 45px;
+      border: 1px solid #ccc;
+      background: white;
+      cursor: pointer;
+      font-size: 11px;
+      color: #333;
+      border-radius: 6px;
+      user-select: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 4px;
+      box-shadow: none;
+      transition: background-color 0.2s;
+    }
+    button:hover, button:focus {
+      background-color: #e6f0ff;
+      outline: none;
+      box-shadow: none;
+    }
+    #content {
+      position: fixed;
+      top: 0; bottom: 0;
+      left: 50px; right: 50px;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    #content.iframe-visible {
+      overflow: auto;
+    }
+    #pageImage {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border: 1px solid #ccc;
+      position: relative;
+      z-index: 1;
+      cursor: grab;
+      transition: transform 0.1s ease-out;
+      user-select: none;
+    }
+    #pageIframe {
+      display: none;
+      border: none;
+      width: 100%;
+      height: 100%;
+    }
+    #tocContainer {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      width: 250px;
+      background: #fff;
+      border: 1px solid #ccc;
+      box-shadow: 3px 0 8px rgba(0,0,0,0.2);
+      z-index: 1500;
+      user-select: none;
+      display: none;
+      flex-direction: column;
+    }
+    #tocCanvas {
+      width: 250px;
+      height: 40px;
+      display: block;
+      cursor: pointer;
+    }
+    #tocButtons {
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px 0;
+    }
+    #tocButtons button {
+      width: 100%;
+      padding: 8px 12px;
+      border: none;
+      background: white;
+      cursor: pointer;
+      text-align: left;
+      font-size: 14px;
+      color: #000;
+      border-bottom: 1px solid #eee;
+    }
+    #tocButtons button:hover {
+      background-color: #cce5ff;
+    }
+    #iframeCloseBtn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: #ddd;
+      border: none;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 14px;
+      cursor: pointer;
+      display: none;
+      z-index: 2000;
+    }
+    #iframeCloseBtn:hover {
+      background: #bbb;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 左サイドバー -->
+<div class="sideButtons left">
+  <button id="tocBtnLeft">目次</button>
+  <button id="prevBtnLeft">前へ</button>
+  <button id="nextBtnLeft">次へ</button>
+  <button id="moreLeft">表示</button>
+  <div class="flyoutButtons" id="flyoutLeft">
+    <button id="zoomInBtn">＋</button>
+    <button id="zoomOutBtn">－</button>
+    <button id="zoomResetBtn">100%</button>
+    <button id="clickToggleBtn">クリック</button>
+  </div>
+</div>
+
+<!-- 右サイドバー -->
+<div class="sideButtons right">
+  <button id="tocBtnRight">目次</button>
+  <button id="prevBtnRight">前へ</button>
+  <button id="nextBtnRight">次へ</button>
+  <button id="moreRight">表示</button>
+  <div class="flyoutButtons" id="flyoutRight">
+    <button id="zoomInBtn2">＋</button>
+    <button id="zoomOutBtn2">－</button>
+    <button id="zoomResetBtn2">100%</button>
+    <button id="clickToggleBtn2">クリック</button>
+  </div>
+</div>
+
+<!-- メインコンテンツ -->
+<div id="content">
+  <img id="pageImage" src="pages/1.png" alt="ページ画像" />
+  <iframe id="pageIframe"></iframe>
+  <button id="iframeCloseBtn">✕</button>
+</div>
+
+<!-- 目次コンテナ -->
+<div id="tocContainer">
+  <canvas id="tocCanvas" width="250" height="40"></canvas>
+  <div id="tocButtons"></div>
+</div>
+
+<script>
+  // 定数・状態変数
+  const totalPages = 200;
+  let currentPage = 1;
+  let tocVisible = false;
+  let tocPosition = 'left';
+  let tocMode = 'page';
+  let currentZoom = 1.0;
+  let offsetX = 0, offsetY = 0;
+  let isDragging = false;
+  let startX = 0, startY = 0;
+  let clickHighlight = false;
+
+  // 要素取得
+  const pageImage = document.getElementById('pageImage');
+  const pageIframe = document.getElementById('pageIframe');
+  const iframeCloseBtn = document.getElementById('iframeCloseBtn');
+  const contentDiv = document.getElementById('content');
+  const tocContainer = document.getElementById('tocContainer');
+  const tocCanvas = document.getElementById('tocCanvas');
+  const tocButtons = document.getElementById('tocButtons');
+  const ctx = tocCanvas.getContext('2d');
+
+  // 目次データ
+  const tocItems = {
+    page: Array.from({length: totalPages}, (_, i) => ({ title: `ページ ${i + 1}`, page: i + 1 })),
+    content: [
+      { title: '単語リスト', url: 'https://shinkamigoto0908.github.io/tangotyo-R7-NEWHORIZON-English-Course/' },
+      { title: '指導者用デジタルブック体験版', url: 'https://taiken.tokyo-shoseki.co.jp/webxp/chu/shidoushadbook/eigo/mokuji/' },
+      { title: 'NEW HORIZON English Course1', url: 'https://sw121.tsho.jp/07jk/nh/1/#e' },
+      { title: 'NEW HORIZON English Course2', url: 'https://sw121.tsho.jp/07jk/nh/2/#e' },
+      { title: 'NEW HORIZON English Course3', url: 'https://sw121.tsho.jp/07jk/nh/3/#e' },
+      { title: 'NEW HORIZONデジタル資料編', url: 'https://sw131.tsho.jp/07jk/nh/db/#d' },
+      { title: '指導者用デジタルブック1年体験版', url: 'https://digibook.tokyo-shoseki.co.jp/sample/nh/c1/top/index.html?g=1' },
+      { title: '指導者用デジタルブック2年体験版', url: 'https://digibook.tokyo-shoseki.co.jp/sample/nh/c2/top/index.html?g=2' }
+    ],
+    video: [
+      { title: 'Key Sentences解説動画１年', url: 'https://sw131.tsho.jp/07jk/nh/db/d/#01' },
+      { title: 'Key Sentences解説動画２年', url: 'https://sw131.tsho.jp/07jk/nh/db/d/#02' },
+      { title: 'Key Sentences解説動画３年', url: 'https://sw131.tsho.jp/07jk/nh/db/d/#03' }
+    ]
+  };
+
+  // ページ更新関数
+  function updatePage(p) {
+    closeIframe();
+    currentPage = Math.max(1, Math.min(p, totalPages));
+    pageImage.src = `pages/${currentPage}.png`;
+    offsetX = 0; offsetY = 0; currentZoom = 1;
+    applyZoom();
+  }
+
+  // iframe開閉関数
+  function openIframe(url) {
+    pageIframe.src = url;
+    pageIframe.style.display = 'block';
+    pageImage.style.display = 'none';
+    iframeCloseBtn.style.display = 'block';
+    contentDiv.classList.add('iframe-visible');
+  }
+
+  function closeIframe() {
+    pageIframe.src = '';
+    pageIframe.style.display = 'none';
+    pageImage.style.display = 'block';
+    iframeCloseBtn.style.display = 'none';
+    contentDiv.classList.remove('iframe-visible');
+  }
+
+  // 拡大縮小反映
+  function applyZoom() {
+    pageImage.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${currentZoom})`;
+  }
+  function zoomIn() {
+    currentZoom += 0.2;
+    applyZoom();
+  }
+  function zoomOut() {
+    currentZoom = Math.max(0.2, currentZoom - 0.2);
+    // 画像が縮小したら位置もリセットしとく
+    if (currentZoom <= 1) {
+      offsetX = 0; offsetY = 0;
+    }
+    applyZoom();
+  }
+  function zoomReset() {
+    currentZoom = 1.0;
+    offsetX = 0;
+    offsetY = 0;
+    applyZoom();
+  }
+
+  // クリックポイント切替＆URL更新
+  function toggleClickHighlight() {
+    clickHighlight = !clickHighlight;
+    const url = new URL(window.location);
+    url.searchParams.set('click-area', clickHighlight);
+    window.history.replaceState({}, '', url);
+  }
+
+  // 目次タブ描画
+  const tabs = ['ページ', 'コンテンツ', '動画'];
+  function drawTabs() {
+    ctx.clearRect(0, 0, tocCanvas.width, tocCanvas.height);
+    const tabWidth = tocCanvas.width / tabs.length;
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'left';
+
+    tabs.forEach((label, i) => {
+      ctx.fillStyle = (tocMode === ['page','content','video'][i]) ? '#bbb' : '#eee';
+      ctx.strokeStyle = '#999';
+      ctx.fillRect(i * tabWidth, 0, tabWidth, tocCanvas.height);
+      ctx.strokeRect(i * tabWidth, 0, tabWidth, tocCanvas.height);
+      ctx.fillStyle = '#222';
+      ctx.fillText(label, i * tabWidth + 10, tocCanvas.height / 2);
+    });
+  }
+
+  // 目次リスト描画
+  function renderTocList() {
+    tocButtons.innerHTML = '';
+    const items = tocItems[tocMode];
+    items.forEach(item => {
+      const btn = document.createElement('button');
+      btn.textContent = item.title;
+      btn.onclick = () => {
+        if (item.page) updatePage(item.page);
+        if (item.url) openIframe(item.url);
+        toggleToc(false);
+      };
+      tocButtons.appendChild(btn);
+    });
+  }
+
+  // 目次表示切替
+  function toggleToc(show = !tocVisible) {
+    tocVisible = show;
+    if (tocVisible) {
+      tocContainer.style.display = 'flex';
+      tocContainer.style.left = tocPosition === 'left' ? '50px' : 'auto';
+      tocContainer.style.right = tocPosition === 'right' ? '50px' : 'auto';
+      drawTabs();
+      renderTocList();
+    } else {
+      tocContainer.style.display = 'none';
+    }
+  }
+
+  // 目次タブクリック
+  tocCanvas.onclick = e => {
+    const tabWidth = tocCanvas.width / tabs.length;
+    const idx = Math.floor(e.offsetX / tabWidth);
+    tocMode = ['page','content','video'][idx];
+    drawTabs();
+    renderTocList();
+  };
+
+  // ボタンイベント割当
+  document.getElementById('tocBtnLeft').onclick = () => {
+    tocPosition = 'left';
+    toggleToc();
+  };
+  document.getElementById('tocBtnRight').onclick = () => {
+    tocPosition = 'right';
+    toggleToc();
+  };
+
+  document.getElementById('prevBtnLeft').onclick = () => updatePage(currentPage - 1);
+  document.getElementById('prevBtnRight').onclick = () => updatePage(currentPage - 1);
+  document.getElementById('nextBtnLeft').onclick = () => updatePage(currentPage + 1);
+  document.getElementById('nextBtnRight').onclick = () => updatePage(currentPage + 1);
+
+  iframeCloseBtn.onclick = () => closeIframe();
+
+  // 飛び出し表示切替
+  function toggleFlyout(side) {
+    const flyout = document.getElementById(side === 'left' ? 'flyoutLeft' : 'flyoutRight');
+    if (flyout.style.display === 'flex') {
+      flyout.style.display = 'none';
+    } else {
+      flyout.style.display = 'flex';
+    }
+  }
+  document.getElementById('moreLeft').onclick = () => toggleFlyout('left');
+  document.getElementById('moreRight').onclick = () => toggleFlyout('right');
+
+  // 飛び出しボタン操作
+  document.getElementById('zoomInBtn').onclick = () => { zoomIn(); };
+  document.getElementById('zoomInBtn2').onclick = () => { zoomIn(); };
+  document.getElementById('zoomOutBtn').onclick = () => { zoomOut(); };
+  document.getElementById('zoomOutBtn2').onclick = () => { zoomOut(); };
+  document.getElementById('zoomResetBtn').onclick = () => { zoomReset(); };
+  document.getElementById('zoomResetBtn2').onclick = () => { zoomReset(); };
+  document.getElementById('clickToggleBtn').onclick = () => { toggleClickHighlight(); };
+  document.getElementById('clickToggleBtn2').onclick = () => { toggleClickHighlight(); };
+
+  // ドラッグで画像移動（拡大時のみ）
+  pageImage.addEventListener('mousedown', e => {
+    if (currentZoom <= 1) return;
+    isDragging = true;
+    startX = e.clientX - offsetX;
+    startY = e.clientY - offsetY;
+    pageImage.style.cursor = 'grabbing';
+  });
+  window.addEventListener('mouseup', e => {
+    isDragging = false;
+    pageImage.style.cursor = currentZoom > 1 ? 'grab' : 'default';
+  });
+  window.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    offsetX = e.clientX - startX;
+    offsetY = e.clientY - startY;
+    applyZoom();
+  });
+
+  // タッチ操作（スマホ対応）
+  pageImage.addEventListener('touchstart', e => {
+    if (currentZoom <= 1) return;
+    const touch = e.touches[0];
+    isDragging = true;
+    startX = touch.clientX - offsetX;
+    startY = touch.clientY - offsetY;
+  });
+  window.addEventListener('touchend', e => {
+    isDragging = false;
+  });
+  window.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    const touch = e.touches[0];
+    offsetX = touch.clientX - startX;
+    offsetY = touch.clientY - startY;
+    applyZoom();
+  });
+
+  // 初期ページ設定
+  updatePage(currentPage);
+
+  // ページ読み込み時にURLのclick-areaクエリ反映（あれば）
+  window.addEventListener('load', () => {
+    const params = new URLSearchParams(window.location.search);
+    const clickAreaParam = params.get('click-area');
+    if (clickAreaParam === 'true') {
+      clickHighlight = true;
+    } else {
+      clickHighlight = false;
+    }
+  });
+</script>
+
+</body>
+</html>
