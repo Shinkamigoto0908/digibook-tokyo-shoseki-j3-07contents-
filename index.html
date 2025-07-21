@@ -3,393 +3,475 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>NEW HORIZON English Course</title>
-<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<title>NEW HORIZON Englsih Course</title>
 <style>
- html, body {
-   margin: 0; padding: 0; height: 100vh; overflow: hidden;
-   background: #cccccc;
-   font-family: "メイリオ", meiryo, sans-serif;
- }
- #parentContainer {
-   position: absolute;
-   width: 1920px;
-   height: 1080px;
-   overflow: hidden;
-   background: #cccccc;
-   border: 1px solid #999;
-   margin: 0;
-   transform-origin: 0 0;
- }
- #imageContainer {
-   position: absolute;
-   top: 0.3px;
-   left: 115.3px;
-   width: 1562.66px;
-   height: 1080px;
-   background: #eee;
-   overflow: hidden;
-   transition: transform 0.3s ease;
-   transform-origin: 0 0;
- }
- #imageContainer img {
-   width: 100%;
-   height: 100%;
-   object-fit: contain;
-   display: block;
-   user-select: none;
-   -webkit-user-drag: none;
-   -moz-user-drag: none;
-   -ms-user-drag: none;
-   user-drag: none;
- }
- .clickPoint {
-   position: absolute;
-   background-color: transparent;
-   cursor: pointer;
-   z-index: 10;
- }
- #sidebar {
-   position: absolute;
-   top: 0.3px;
-   left: 1757.5px;
-   width: 162.5px;
-   height: 1080px;
-   background: #f2f2f2;
-   border-left: 1px solid #aaa;
-   box-sizing: border-box;
- }
- .tabButton {
-   position: absolute;
-   left: 9.7px;
-   width: 144.1px;
-   height: 45.3px;
-   border-radius: 7px;
-   background: #f2f2f2;
-   border: 1px solid #aaa;
-   color: #333;
-   font-weight: normal;
-   font-size: 16px;
-   line-height: 45.3px;
-   text-align: center;
-   user-select: none;
-   cursor: pointer;
-   box-sizing: border-box;
-   transition: background-color 0.2s ease;
- }
- .tabButton:hover {
-   background: #e0e0e0;
- }
- .tabButton.longLabel {
-   font-size: 13.5px;
-   line-height: 18px;
-   padding-top: 6px;
- }
- .pageBtn {
-   position: absolute;
-   width: 56px;
-   height: 56px;
-   background-repeat: no-repeat;
-   background-position: center;
-   background-size: contain;
-   cursor: pointer;
-   border: none;
-   background-color: transparent;
-   box-shadow: none;
-   transition: box-shadow 0.3s ease;
- }
- #btnLeft {
-   top: 1024.2px;
-   left: 57px;
-   background-image: url('left.png');
- }
- #btnRight {
-   top: 1024.2px;
-   left: 1678.9px;
-   background-image: url('right.png');
- }
- .pageBtn.highlight {
-   box-shadow: 0 0 10px 3px #00bfff;
- }
+  html, body {
+    margin:0; padding:0; height:100vh; background:#ccc;
+    font-family: "メイリオ", meiryo, sans-serif;
+    overflow: hidden;
+  }
+  #parentContainer {
+    position: absolute;
+    width: 1920px; height:1080px;
+    border:1px solid #999;
+    background:#ccc;
+    transform-origin: 0 0;
+  }
+  #imageContainer {
+    position: absolute;
+    top: 0.3px; left: 115.3px;
+    width: 1562.66px; height: 1080px;
+    background: #eee;
+    overflow: hidden;
+    touch-action: none;
+    cursor: grab;
+  }
+  #imageContainer.grabbing {
+    cursor: grabbing;
+  }
+  #mainImage {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+    transform-origin: 0 0;
+    position: relative;
+    left: 0;
+    top: 0;
+    transition: none;
+  }
+  .clickPoint {
+    position: absolute;
+    background-color: transparent;
+    cursor: pointer;
+    z-index: 10;
+  }
+  #sidebar {
+    position: absolute;
+    top: 0.3px;
+    left: 1757.5px;
+    width: 162.5px;
+    height: 1080px;
+    background: #f2f2f2;
+    border-left: 1px solid #aaa;
+    box-sizing: border-box;
+  }
+  .tabButton {
+    position: absolute;
+    left: 9.7px;
+    width: 144.1px;
+    height: 45.3px;
+    border-radius: 7px;
+    background: #f2f2f2;
+    border: 1px solid #aaa;
+    color: #333;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 45.3px;
+    text-align: center;
+    user-select: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease;
+  }
+  .tabButton:hover {
+    background: #e0e0e0;
+  }
+  .tabButton.longLabel {
+    font-size: 13.5px;
+    line-height: 18px;
+    padding-top: 6px;
+  }
+  .pageBtn {
+    position: absolute;
+    width: 56px;
+    height: 56px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+    transition: box-shadow 0.3s ease;
+  }
+  #btnLeft {
+    top: 1024.2px;
+    left: 57px;
+    background-image: url('left.png');
+  }
+  #btnRight {
+    top: 1024.2px;
+    left: 1678.9px;
+    background-image: url('right.png');
+  }
+  .pageBtn.highlight {
+    box-shadow: 0 0 10px 3px #00bfff;
+  }
 
- /* クリックエリアの位置サイズ調整 */
- #returnLeft {
-   left: 7px;
-   top: 1015.7px;
-   width: 58.2px;
-   height: 58.2px;
-   display: none;
-   position: absolute;
-   z-index: 20;
-   background-color: transparent;
-   cursor: pointer;
- }
- #returnRight {
-   left: 1617px;
-   top: 1015.7px;
-   width: 58.2px;
-   height: 58.2px;
-   display: none;
-   position: absolute;
-   z-index: 20;
-   background-color: transparent;
-   cursor: pointer;
- }
+  /* クリックエリアの位置サイズ調整 */
+  #returnLeft {
+    left: 7px;
+    top: 1015.7px;
+    width: 58.2px;
+    height: 58.2px;
+    display: none;
+    position: absolute;
+    z-index: 20;
+    background-color: transparent;
+    cursor: pointer;
+  }
+  #returnRight {
+    left: 1617px;
+    top: 1015.7px;
+    width: 58.2px;
+    height: 58.2px;
+    display: none;
+    position: absolute;
+    z-index: 20;
+    background-color: transparent;
+    cursor: pointer;
+  }
+
+  /* 拡大用ボタン配置 */
+  #normalButtons {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  #zoomButtons {
+    display: none;
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
 </style>
 </head>
 <body>
 
 <div id="parentContainer">
- <div id="imageContainer">
-   <img id="mainImage" src="pages/1.png" alt="ページ画像" />
-   <!-- クリックポイント -->
-   <div id="clickArea1" class="clickPoint" style="left:94.6px; top:161.1px; width:442.3px; height:231.2px;"></div>
-   <div id="clickArea2" class="clickPoint" style="left:619.3px; top:161.1px; width:442.3px; height:231.2px;"></div>
-   <div id="clickArea3" class="clickPoint" style="left:1144.1px; top:161.1px; width:442.3px; height:231.2px;"></div>
-   <div id="clickArea4" class="clickPoint" style="left:94.6px; top:558.3px; width:442.3px; height:148.6px;"></div>
-   <div id="clickArea5" class="clickPoint" style="left:619.3px; top:558.3px; width:442.3px; height:148.6px;"></div>
-   <div id="clickArea6" class="clickPoint" style="left:1143.7px; top:558.3px; width:442.3px; height:148.6px;"></div>
-   <!-- toolboxモードから本誌に戻るクリックエリア -->
-   <div id="returnLeft" class="clickPoint"></div>
-   <div id="returnRight" class="clickPoint"></div>
- </div>
+  <div id="imageContainer">
+    <img id="mainImage" src="pages/1.png" alt="ページ画像" />
+    <!-- クリックポイント -->
+    <div id="clickArea1" class="clickPoint" style="left:94.6px; top:161.1px; width:442.3px; height:231.2px;"></div>
+    <div id="clickArea2" class="clickPoint" style="left:619.3px; top:161.1px; width:442.3px; height:231.2px;"></div>
+    <div id="clickArea3" class="clickPoint" style="left:1144.1px; top:161.1px; width:442.3px; height:231.2px;"></div>
+    <div id="clickArea4" class="clickPoint" style="left:94.6px; top:558.3px; width:442.3px; height:148.6px;"></div>
+    <div id="clickArea5" class="clickPoint" style="left:619.3px; top:558.3px; width:442.3px; height:148.6px;"></div>
+    <div id="clickArea6" class="clickPoint" style="left:1143.7px; top:558.3px; width:442.3px; height:148.6px;"></div>
+    <!-- toolboxモードから本誌に戻るクリックエリア -->
+    <div id="returnLeft" class="clickPoint"></div>
+    <div id="returnRight" class="clickPoint"></div>
+  </div>
 
- <div id="btnLeft" class="pageBtn" title="左ページへ"></div>
- <div id="btnRight" class="pageBtn" title="右ページへ"></div>
+  <div id="btnLeft" class="pageBtn" title="左ページへ"></div>
+  <div id="btnRight" class="pageBtn" title="右ページへ"></div>
 
- <div id="sidebar">
-   <div id="normalButtons">
-     <div class="tabButton" style="top: 9.7px;">ヘルプ</div>
-     <div class="tabButton" style="top: 64.7px;" id="btnPrint">印刷</div>
-     <div class="tabButton" style="top: 119.7px;">MY教科書エディタ</div>
-     <div class="tabButton" style="top: 174.7px;" id="btnZoom">拡大</div>
-     <div class="tabButton longLabel" id="btnContentCollection" style="top: 229.7px;">
-       便利な<br>デジタルコンテンツ集
-     </div>
-   </div>
+  <div id="sidebar">
+    <div id="normalButtons">
+      <div class="tabButton" style="top: 9.7px;">ヘルプ</div>
+      <div class="tabButton" style="top: 64.7px;" id="btnPrint">印刷</div>
+      <div class="tabButton" style="top: 119.7px;">MY教科書エディタ</div>
+      <div class="tabButton" style="top: 174.7px;" id="btnZoom">拡大</div>
+      <div class="tabButton longLabel" id="btnContentCollection" style="top: 229.7px;">
+        便利な<br>デジタルコンテンツ集
+      </div>
+    </div>
 
-   <div id="zoomButtons" style="display:none; position: relative; width: 100%; height: 100%;">
-     <div class="tabButton" style="top: 20px; left: 9.7px; width: 144.1px;" id="btnZoomIn">拡大</div>
-     <div class="tabButton" style="top: 80px; left: 9.7px; width: 144.1px;" id="btnZoomOut">縮小</div>
-     <div class="tabButton" style="top: 140px; left: 9.7px; width: 144.1px;" id="btnZoomReset">100%</div>
-     <div class="tabButton" style="position:absolute; bottom: 20px; left: 9.7px; width: 144.1px;" id="btnZoomClose">閉じる</div>
-   </div>
- </div>
+    <div id="zoomButtons">
+      <div class="tabButton" style="top: 20px; left: 9.7px; width: 144.1px;" id="btnZoomIn">拡大</div>
+      <div class="tabButton" style="top: 80px; left: 9.7px; width: 144.1px;" id="btnZoomOut">縮小</div>
+      <div class="tabButton" style="top: 140px; left: 9.7px; width: 144.1px;" id="btnZoomReset">100%</div>
+      <div class="tabButton" style="position:absolute; bottom: 20px; left: 9.7px; width: 144.1px;" id="btnZoomClose">閉じる</div>
+    </div>
+  </div>
 </div>
 
 <script>
- let currentPage = 1;
- const maxPage = 200;
- let scale = 1;
- let toolboxMode = false;
+  let currentPage = 1;
+  const maxPage = 200;
+  let scale = 1;
+  let posX = 0;
+  let posY = 0;
+  let toolboxMode = false;
 
- const mainImage = document.getElementById('mainImage');
- const btnLeft = document.getElementById('btnLeft');
- const btnRight = document.getElementById('btnRight');
- const imageContainer = document.getElementById('imageContainer');
+  const mainImage = document.getElementById('mainImage');
+  const btnLeft = document.getElementById('btnLeft');
+  const btnRight = document.getElementById('btnRight');
+  const imageContainer = document.getElementById('imageContainer');
 
- const normalButtons = document.getElementById('normalButtons');
- const zoomButtons = document.getElementById('zoomButtons');
+  const normalButtons = document.getElementById('normalButtons');
+  const zoomButtons = document.getElementById('zoomButtons');
 
- const returnLeft = document.getElementById('returnLeft');
- const returnRight = document.getElementById('returnRight');
+  const returnLeft = document.getElementById('returnLeft');
+  const returnRight = document.getElementById('returnRight');
 
- // ページ切り替えボタン
- btnLeft.addEventListener('click', () => {
-   if(toolboxMode) return;
-   if(currentPage > 1) {
-     currentPage--;
-     updatePage();
-   }
- });
- btnRight.addEventListener('click', () => {
-   if(toolboxMode) return;
-   if(currentPage < maxPage) {
-     currentPage++;
-     updatePage();
-   }
- });
+  const clickAreas = [
+    document.getElementById('clickArea1'),
+    document.getElementById('clickArea2'),
+    document.getElementById('clickArea3'),
+    document.getElementById('clickArea4'),
+    document.getElementById('clickArea5'),
+    document.getElementById('clickArea6'),
+  ];
 
- function updatePage() {
-   mainImage.src = `pages/${currentPage}.png`;
-   updateClickAreas();
-   removeHighlight();
- }
- function removeHighlight() {
-   btnLeft.classList.remove('highlight');
-   btnRight.classList.remove('highlight');
- }
+  // ページ切り替えボタン
+  btnLeft.addEventListener('click', () => {
+    if(toolboxMode) return;
+    if(currentPage > 1) {
+      currentPage--;
+      updatePage();
+    }
+  });
+  btnRight.addEventListener('click', () => {
+    if(toolboxMode) return;
+    if(currentPage < maxPage) {
+      currentPage++;
+      updatePage();
+    }
+  });
 
- // クリックポイントURLマップ
- const clickPointUrls = {
-   clickArea1: 'https://sw121.tsho.jp/07jk/nh/1/#e',
-   clickArea2: 'https://sw121.tsho.jp/07jk/nh/2/#e',
-   clickArea3: 'https://sw121.tsho.jp/07jk/nh/3/#e',
-   clickArea4: 'https://sw111.tsho.jp/07jk/nh/db/d/#03',
-   clickArea5: 'https://digibook.tokyo-shoseki.co.jp/sample/nh/c1/top/index.html?g=1',
-   clickArea6: 'https://digibook.tokyo-shoseki.co.jp/sample/nh/c2/top/index.html?g=2',
- };
+  function updatePage() {
+    mainImage.src = `pages/${currentPage}.png`;
+    scale = 1;
+    posX = 0;
+    posY = 0;
+    applyTransform();
+    removeHighlight();
+    disableClickAreas();  // 本誌ページならクリックエリアは無効化
+  }
 
- Object.entries(clickPointUrls).forEach(([id, url]) => {
-   const el = document.getElementById(id);
-   if(el) {
-     el.addEventListener('click', () => {
-       if(toolboxMode) {
-         window.open(url, '_blank');
-       }
-     });
-   }
- });
+  function removeHighlight() {
+    btnLeft.classList.remove('highlight');
+    btnRight.classList.remove('highlight');
+  }
 
- // toolboxモードから戻るクリックエリア表示切り替え
- function showReturnButtons(show) {
-   returnLeft.style.display = show ? 'block' : 'none';
-   returnRight.style.display = show ? 'block' : 'none';
- }
+  // クリックポイントURLマップ
+  const clickPointUrls = {
+    clickArea1: 'https://sw121.tsho.jp/07jk/nh/1/#e',
+    clickArea2: 'https://sw121.tsho.jp/07jk/nh/2/#e',
+    clickArea3: 'https://sw121.tsho.jp/07jk/nh/3/#e',
+    clickArea4: 'https://sw111.tsho.jp/07jk/nh/db/d/#03',
+    clickArea5: 'https://digibook.tokyo-shoseki.co.jp/sample/nh/c1/top/index.html?g=1',
+    clickArea6: 'https://digibook.tokyo-shoseki.co.jp/sample/nh/c2/top/index.html?g=2',
+  };
 
- // toolbox表示用ボタン
- const btnContentCollection = document.getElementById('btnContentCollection');
- btnContentCollection.addEventListener('click', () => {
-   toolboxMode = true;
-   mainImage.src = 'pages/toolbox.png';
-   btnLeft.style.display = 'none';
-   btnRight.style.display = 'none';
-   imageContainer.style.left = '36.6px';
-   imageContainer.style.top = '0.3px';
-   imageContainer.style.width = '1679.6px';
-   imageContainer.style.height = '1080px';
-   scale = 1;
-   applyScale();
-   showReturnButtons(true);
-   updateClickAreas();
- });
+  Object.entries(clickPointUrls).forEach(([id, url]) => {
+    const el = document.getElementById(id);
+    if(el) {
+      el.addEventListener('click', () => {
+        window.open(url, '_blank');
+      });
+    }
+  });
 
- // 戻るクリックエリアのクリックイベント
- returnLeft.addEventListener('click', () => {
-   restoreDefaultView();
- });
- returnRight.addEventListener('click', () => {
-   restoreDefaultView();
- });
+  // クリックエリア有効化・無効化
+  function enableClickAreas() {
+    clickAreas.forEach(el => {
+      if(!el) return;
+      el.style.pointerEvents = 'auto';
+      el.style.cursor = 'pointer';
+    });
+  }
+  function disableClickAreas() {
+    clickAreas.forEach(el => {
+      if(!el) return;
+      el.style.pointerEvents = 'none';
+      el.style.cursor = 'default';
+    });
+  }
 
- // 元に戻す関数
- function restoreDefaultView() {
-   toolboxMode = false;
-   mainImage.src = `pages/${currentPage}.png`;
-   btnLeft.style.display = 'block';
-   btnRight.style.display = 'block';
-   imageContainer.style.left = '115.3px';
-   imageContainer.style.top = '0.3px';
-   imageContainer.style.width = '1562.66px';
-   imageContainer.style.height = '1080px';
-   scale = 1;
-   applyScale();
-   showReturnButtons(false);
-   updateClickAreas();
- }
+  // toolboxモード戻るボタン表示切替
+  function showReturnButtons(show) {
+    returnLeft.style.display = show ? 'block' : 'none';
+    returnRight.style.display = show ? 'block' : 'none';
+  }
 
- // クリックエリアの表示・無効制御関数
- function updateClickAreas() {
-   const clickAreas = document.querySelectorAll('.clickPoint');
-   clickAreas.forEach(area => {
-     if(toolboxMode) {
-       // toolboxモード時はクリックエリアを有効に表示
-       // ただし戻るクリックエリアは常に表示
-       if(area.id === 'returnLeft' || area.id === 'returnRight') {
-         area.style.display = 'block';
-       } else {
-         area.style.display = 'block';
-       }
-       area.style.pointerEvents = 'auto';
-     } else {
-       // 本誌モード時はクリックエリア無効化（見えない＆反応なし）
-       if(area.id === 'returnLeft' || area.id === 'returnRight') {
-         area.style.display = 'none';
-         area.style.pointerEvents = 'none';
-       } else {
-         area.style.display = 'none';
-         area.style.pointerEvents = 'none';
-       }
-     }
-   });
- }
+  // toolbox表示切替
+  const btnContentCollection = document.getElementById('btnContentCollection');
+  btnContentCollection.addEventListener('click', () => {
+    toolboxMode = true;
+    mainImage.src = 'pages/toolbox.png';
+    btnLeft.style.display = 'none';
+    btnRight.style.display = 'none';
+    imageContainer.style.left = '36.6px';
+    imageContainer.style.top = '0.3px';
+    imageContainer.style.width = '1679.6px';
+    imageContainer.style.height = '1080px';
+    scale = 1;
+    posX = 0;
+    posY = 0;
+    applyTransform();
+    showReturnButtons(true);
+    enableClickAreas();
+  });
 
- // 拡大ボタン切り替え
- document.getElementById('btnZoom').addEventListener('click', () => {
-   normalButtons.style.display = 'none';
-   zoomButtons.style.display = 'block';
- });
+  returnLeft.addEventListener('click', restoreDefaultView);
+  returnRight.addEventListener('click', restoreDefaultView);
 
- // 拡大縮小の適用
- function applyScale() {
-   imageContainer.style.transform = `scale(${scale})`;
- }
+  function restoreDefaultView() {
+    toolboxMode = false;
+    mainImage.src = `pages/${currentPage}.png`;
+    btnLeft.style.display = 'block';
+    btnRight.style.display = 'block';
+    imageContainer.style.left = '115.3px';
+    imageContainer.style.top = '0.3px';
+    imageContainer.style.width = '1562.66px';
+    imageContainer.style.height = '1080px';
+    scale = 1;
+    posX = 0;
+    posY = 0;
+    applyTransform();
+    showReturnButtons(false);
+    disableClickAreas();
+  }
 
- // 拡大ボタン
- document.getElementById('btnZoomIn').addEventListener('click', () => {
-   scale += 0.4;
-   if(scale > 3) scale = 3; // 上限3倍
-   applyScale();
- });
- // 縮小ボタン
- document.getElementById('btnZoomOut').addEventListener('click', () => {
-   scale -= 0.4;
-   if(scale < 0.4) scale = 0.4; // 下限0.4倍
-   applyScale();
- });
- // 100%ボタン
- document.getElementById('btnZoomReset').addEventListener('click', () => {
-   scale = 1;
-   applyScale();
- });
- // 閉じるボタン
- document.getElementById('btnZoomClose').addEventListener('click', () => {
-   zoomButtons.style.display = 'none';
-   normalButtons.style.display = 'block';
-   scale = 1;
-   applyScale();
- });
+  // 拡大・パン用変数・関数
+  let isDragging = false;
+  let dragStartX, dragStartY;
+  let imgStartX, imgStartY;
 
- // リサイズ処理（中央寄せ＆拡大に対応）
- function resizeContainer() {
-   const vw = window.innerWidth;
-   const vh = window.innerHeight;
-   const aspectRatio = 1920 / 1080;
-   let scaleRatio;
-   let marginLeft = 0;
-   let marginTop = 0;
+  function applyTransform() {
+    mainImage.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
+  }
 
-   if (vw / vh > aspectRatio) {
-     scaleRatio = vh / 1080;
-     marginLeft = (vw - 1920 * scaleRatio) / 2;
-   } else {
-     scaleRatio = vw / 1920;
-     marginTop = (vh - 1080 * scaleRatio) / 2;
-   }
+  function startDrag(x, y) {
+    if(scale <= 1) return; // 拡大時のみパン有効
+    isDragging = true;
+    dragStartX = x;
+    dragStartY = y;
+    imgStartX = posX;
+    imgStartY = posY;
+    imageContainer.classList.add('grabbing');
+  }
+  function onDrag(x, y) {
+    if(!isDragging) return;
+    let dx = x - dragStartX;
+    let dy = y - dragStartY;
+    posX = imgStartX + dx;
+    posY = imgStartY + dy;
 
-   const parent = document.getElementById('parentContainer');
-   parent.style.transform = `scale(${scaleRatio})`;
-   parent.style.marginLeft = `${marginLeft}px`;
-   parent.style.marginTop = `${marginTop}px`;
- }
+    // 画像のはみ出し制限（ざっくり）
+    const maxX = 0;
+    const maxY = 0;
+    const minX = imageContainer.clientWidth - mainImage.clientWidth * scale;
+    const minY = imageContainer.clientHeight - mainImage.clientHeight * scale;
+    if(posX > maxX) posX = maxX;
+    if(posY > maxY) posY = maxY;
+    if(posX < minX) posX = minX;
+    if(posY < minY) posY = minY;
 
- // 画像プリロード
- function preloadImages() {
-   for(let i = 1; i <= maxPage; i++) {
-     const img = new Image();
-     img.src = `pages/${i}.png`;
-   }
-   // toolbox.pngもプリロードしとく
-   const toolboxImg = new Image();
-   toolboxImg.src = 'pages/toolbox.png';
- }
+    applyTransform();
+  }
+  function endDrag() {
+    isDragging = false;
+    imageContainer.classList.remove('grabbing');
+  }
 
- window.addEventListener('resize', resizeContainer);
- window.addEventListener('load', () => {
-   resizeContainer();
-   restoreDefaultView();
-   preloadImages();
-});
+  // マウスイベント
+  imageContainer.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    startDrag(e.clientX, e.clientY);
+  });
+  window.addEventListener('mousemove', (e) => {
+    if(!isDragging) return;
+    e.preventDefault();
+    onDrag(e.clientX, e.clientY);
+  });
+  window.addEventListener('mouseup', (e) => {
+    if(isDragging) {
+      e.preventDefault();
+      endDrag();
+    }
+  });
+
+  // タッチイベント
+  imageContainer.addEventListener('touchstart', (e) => {
+    if(e.touches.length === 1) {
+      const t = e.touches[0];
+      startDrag(t.clientX, t.clientY);
+    }
+  });
+  imageContainer.addEventListener('touchmove', (e) => {
+    if(!isDragging) return;
+    if(e.touches.length === 1) {
+      const t = e.touches[0];
+      onDrag(t.clientX, t.clientY);
+    }
+  });
+  imageContainer.addEventListener('touchend', (e) => {
+    if(isDragging) endDrag();
+  });
+
+  // 拡大・縮小ボタン処理
+  document.getElementById('btnZoom').addEventListener('click', () => {
+    normalButtons.style.display = 'none';
+    zoomButtons.style.display = 'block';
+  });
+  document.getElementById('btnZoomIn').addEventListener('click', () => {
+    scale += 0.4;
+    if(scale > 3) scale = 3;
+    applyTransform();
+  });
+  document.getElementById('btnZoomOut').addEventListener('click', () => {
+    scale -= 0.4;
+    if(scale < 1) {
+      scale = 1;
+      posX = 0;
+      posY = 0;
+    }
+    applyTransform();
+  });
+  document.getElementById('btnZoomReset').addEventListener('click', () => {
+    scale = 1;
+    posX = 0;
+    posY = 0;
+    applyTransform();
+  });
+  document.getElementById('btnZoomClose').addEventListener('click', () => {
+    zoomButtons.style.display = 'none';
+    normalButtons.style.display = 'block';
+    scale = 1;
+    posX = 0;
+    posY = 0;
+    applyTransform();
+  });
+
+  // 印刷ボタン
+  document.getElementById('btnPrint').addEventListener('click', () => {
+    window.print();
+  });
+
+  // リサイズ処理（親コンテナのスケーリングと中央寄せ）
+  function resizeContainer() {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const aspectRatio = 1920 / 1080;
+    let scaleRatio;
+    let marginLeft = 0;
+    let marginTop = 0;
+
+    if (vw / vh > aspectRatio) {
+      scaleRatio = vh / 1080;
+      marginLeft = (vw - 1920 * scaleRatio) / 2;
+    } else {
+      scaleRatio = vw / 1920;
+      marginTop = (vh - 1080 * scaleRatio) / 2;
+    }
+
+    const parent = document.getElementById('parentContainer');
+    parent.style.transform = `scale(${scaleRatio})`;
+    parent.style.marginLeft = `${marginLeft}px`;
+    parent.style.marginTop = `${marginTop}px`;
+  }
+
+  window.addEventListener('resize', resizeContainer);
+  window.addEventListener('load', () => {
+    resizeContainer();
+    updatePage();
+    disableClickAreas();
+  });
 </script>
 
 </body>
