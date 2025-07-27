@@ -3,476 +3,433 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>NEW HORIZON Englsih Course</title>
-<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<title>NEW HORIZON English Course3</title>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
 <style>
   html, body {
-    margin:0; padding:0; height:100vh; background:#ccc;
-    font-family: "メイリオ", meiryo, sans-serif;
+    margin: 0; padding: 0; height: 100vh; width: 100vw;
+    background: #fff;
     overflow: hidden;
+    font-family: "メイリオ", meiryo, sans-serif;
   }
   #parentContainer {
     position: absolute;
-    width: 1920px; height:1080px;
-    border:1px solid #999;
-    background:#ccc;
-    transform-origin: 0 0;
-  }
-  #imageContainer {
-    position: absolute;
-    top: 0.3px; left: 115.3px;
-    width: 1562.66px; height: 1080px;
-    background: #eee;
-    overflow: hidden;
-    touch-action: none;
-    cursor: grab;
-  }
-  #imageContainer.grabbing {
-    cursor: grabbing;
-  }
-  #mainImage {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    user-select: none;
-    -webkit-user-drag: none;
-    transform-origin: 0 0;
-    position: relative;
-    left: 0;
-    top: 0;
-    transition: none;
-  }
-  .clickPoint {
-    position: absolute;
-    background-color: transparent;
-    cursor: pointer;
-    z-index: 10;
-  }
-  #sidebar {
-    position: absolute;
-    top: 0.3px;
-    left: 1757.5px;
-    width: 162.5px;
+    width: 1920px;
     height: 1080px;
-    background: #f2f2f2;
-    border-left: 1px solid #aaa;
-    box-sizing: border-box;
-  }
-  .tabButton {
-    position: absolute;
-    left: 9.7px;
-    width: 144.1px;
-    height: 45.3px;
-    border-radius: 7px;
-    background: #f2f2f2;
-    border: 1px solid #aaa;
-    color: #333;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 45.3px;
-    text-align: center;
-    user-select: none;
-    cursor: pointer;
-    box-sizing: border-box;
-    transition: background-color 0.2s ease;
-  }
-  .tabButton:hover {
-    background: #e0e0e0;
-  }
-  .tabButton.longLabel {
-    font-size: 13.5px;
-    line-height: 18px;
-    padding-top: 6px;
-  }
-  .pageBtn {
-    position: absolute;
-    width: 56px;
-    height: 56px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    cursor: pointer;
+    background: #fff;
+    left: 50%;
+    top: 50%;
     border: none;
-    background-color: transparent;
-    box-shadow: none;
-    transition: box-shadow 0.3s ease;
-  }
-  #btnLeft {
-    top: 1024.2px;
-    left: 57px;
-    background-image: url('left.png');
-  }
-  #btnRight {
-    top: 1024.2px;
-    left: 1678.9px;
-    background-image: url('right.png');
-  }
-  .pageBtn.highlight {
-    box-shadow: 0 0 10px 3px #00bfff;
+    transform-origin: 50% 50%;
   }
 
-  /* クリックエリアの位置サイズ調整 */
-  #returnLeft {
-    left: 7px;
-    top: 1015.7px;
-    width: 58.2px;
-    height: 58.2px;
-    display: none;
+  .sidebar {
     position: absolute;
-    z-index: 20;
-    background-color: transparent;
-    cursor: pointer;
+    top: 0;
+    width: 97.4px;
+    height: 1080px;
+    background: #cacaca;
+    box-sizing: border-box;
+    padding-top: 13px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  #returnRight {
-    left: 1617px;
-    top: 1015.7px;
-    width: 58.2px;
-    height: 58.2px;
-    display: none;
-    position: absolute;
-    z-index: 20;
-    background-color: transparent;
+  #sidebarLeft { left: 0; }
+  #sidebarRight { right: 0; }
+
+  .sidebarItem {
+    width: 71px;
+    height: 71px;
+    margin-bottom: 13px;
+    padding: 0;
+    border: none;
+    background: none;
     cursor: pointer;
+    filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.15));
+    position: relative;
+  }
+  .sidebarItem img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  /* 目次のボタンだけグレーアウト */
+  .sidebarItem.disabled img {
+    filter: grayscale(100%) brightness(70%);
+    cursor: default;
   }
 
-  /* 拡大用ボタン配置 */
-  #normalButtons {
-    position: relative;
-    width: 100%;
-    height: 100%;
+  #toggleLeftSwitch, #toggleRightSwitch {
+    position: absolute;
+    width: 30.8px;
+    height: 86.4px;
+    top: 496.8px;
+    cursor: pointer;
+    z-index: 1100;
   }
-  #zoomButtons {
-    display: none;
-    position: relative;
+  #toggleLeftSwitch { left: 0; }
+  #toggleRightSwitch { left: 1886.2px; }
+
+  #toggleLeftSwitch img, #toggleRightSwitch img {
     width: 100%;
     height: 100%;
+    display: block;
+    object-fit: contain;
+  }
+
+  /* 紙面表示エリア */
+  #pageContainer {
+    position: absolute;
+    width: 1534.9px;
+    height: 1040.1px;
+    left: 191.3px;
+    top: 0;
+    overflow: hidden;
+    background: #fff;
+    user-select: none;
+  }
+  #pageImage {
+    position: absolute;
+    left: 0; top: 0;
+    width: 1534.9px;
+    height: 1040.1px;
+    cursor: grab;
+    touch-action: none;
+    transition: transform 0.1s ease-out;
+  }
+
+  /* ページ切替ボタン */
+  #pageLeftBtn, #pageRightBtn {
+    position: absolute;
+    width: 70.3px;
+    height: 39.9px;
+    cursor: pointer;
+    z-index: 1200;
+  }
+  #pageLeftBtn {
+    left: 191.3px;
+    top: 1040.1px;
+  }
+  #pageRightBtn {
+    left: 1655.9px;
+    top: 1040.1px;
+  }
+
+  /* iframe表示 */
+  #contentIframe {
+    position: absolute;
+    left: 191.3px;
+    top: 0;
+    width: 1534.9px;
+    height: 1040.1px;
+    border: none;
+    display: none;
+    background: #fff;
+  }
+
+  /* 閉じるボタン */
+  #closeIframeBtn {
+    position: absolute;
+    width: 46.8px;
+    height: 46.8px;
+    left: 1670px;
+    top: 6.5px;
+    cursor: pointer;
+    z-index: 1300;
+    display: none;
   }
 </style>
 </head>
 <body>
 
 <div id="parentContainer">
-  <div id="imageContainer">
-    <img id="mainImage" src="pages/1.png" alt="ページ画像" />
-    <!-- クリックポイント -->
-    <div id="clickArea1" class="clickPoint" style="left:94.6px; top:161.1px; width:442.3px; height:231.2px;"></div>
-    <div id="clickArea2" class="clickPoint" style="left:619.3px; top:161.1px; width:442.3px; height:231.2px;"></div>
-    <div id="clickArea3" class="clickPoint" style="left:1144.1px; top:161.1px; width:442.3px; height:231.2px;"></div>
-    <div id="clickArea4" class="clickPoint" style="left:94.6px; top:558.3px; width:442.3px; height:148.6px;"></div>
-    <div id="clickArea5" class="clickPoint" style="left:619.3px; top:558.3px; width:442.3px; height:148.6px;"></div>
-    <div id="clickArea6" class="clickPoint" style="left:1143.7px; top:558.3px; width:442.3px; height:148.6px;"></div>
-    <!-- toolboxモードから本誌に戻るクリックエリア -->
-    <div id="returnLeft" class="clickPoint"></div>
-    <div id="returnRight" class="clickPoint"></div>
+  <!-- 左サイドバー -->
+  <div id="sidebarLeft" class="sidebar">
+    <button class="sidebarItem" data-action="zoomIn"><img src="01.svg" alt="拡大" loading="lazy"></button>
+    <button class="sidebarItem" data-action="zoomOut"><img src="02.svg" alt="縮小" loading="lazy"></button>
+    <button class="sidebarItem" data-action="resetZoom"><img src="03.svg" alt="100%" loading="lazy"></button>
+    <button class="sidebarItem" data-action="keySentences"><img src="04.svg" alt="Key Sentences" loading="lazy"></button>
+    <button class="sidebarItem" data-action="yourei"><img src="05.svg" alt="用例辞典" loading="lazy"></button>
+    <button class="sidebarItem" data-action="digitalMap"><img src="06.svg" alt="デジタルマップ" loading="lazy"></button>
+    <button class="sidebarItem" data-action="originalCard"><img src="07.svg" alt="オリジナル絵カード" loading="lazy"></button>
+    <button class="sidebarItem disabled" data-action="toc" disabled><img src="08.svg" alt="目次" loading="lazy"></button>
   </div>
 
-  <div id="btnLeft" class="pageBtn" title="左ページへ"></div>
-  <div id="btnRight" class="pageBtn" title="右ページへ"></div>
-
-  <div id="sidebar">
-    <div id="normalButtons">
-      <div class="tabButton" style="top: 9.7px;">ヘルプ</div>
-      <div class="tabButton" style="top: 64.7px;" id="btnPrint">印刷</div>
-      <div class="tabButton" style="top: 119.7px;">MY教科書エディタ</div>
-      <div class="tabButton" style="top: 174.7px;" id="btnZoom">拡大</div>
-      <div class="tabButton longLabel" id="btnContentCollection" style="top: 229.7px;">
-        便利な<br>デジタルコンテンツ集
-      </div>
-    </div>
-
-    <div id="zoomButtons">
-      <div class="tabButton" style="top: 20px; left: 9.7px; width: 144.1px;" id="btnZoomIn">拡大</div>
-      <div class="tabButton" style="top: 80px; left: 9.7px; width: 144.1px;" id="btnZoomOut">縮小</div>
-      <div class="tabButton" style="top: 140px; left: 9.7px; width: 144.1px;" id="btnZoomReset">100%</div>
-      <div class="tabButton" style="position:absolute; bottom: 20px; left: 9.7px; width: 144.1px;" id="btnZoomClose">閉じる</div>
-    </div>
+  <!-- 右サイドバー -->
+  <div id="sidebarRight" class="sidebar" style="display:none;">
+    <button class="sidebarItem" data-action="zoomIn"><img src="01.svg" alt="拡大" loading="lazy"></button>
+    <button class="sidebarItem" data-action="zoomOut"><img src="02.svg" alt="縮小" loading="lazy"></button>
+    <button class="sidebarItem" data-action="resetZoom"><img src="03.svg" alt="100%" loading="lazy"></button>
+    <button class="sidebarItem" data-action="keySentences"><img src="04.svg" alt="Key Sentences" loading="lazy"></button>
+    <button class="sidebarItem" data-action="yourei"><img src="05.svg" alt="用例辞典" loading="lazy"></button>
+    <button class="sidebarItem" data-action="digitalMap"><img src="06.svg" alt="デジタルマップ" loading="lazy"></button>
+    <button class="sidebarItem" data-action="originalCard"><img src="07.svg" alt="オリジナル絵カード" loading="lazy"></button>
+    <button class="sidebarItem disabled" data-action="toc" disabled><img src="08.svg" alt="目次" loading="lazy"></button>
   </div>
+
+  <!-- 切替ボタン -->
+  <img id="toggleLeftSwitch" src="sidebar-left.svg" alt="左切替スイッチ" loading="lazy" style="display:none;">
+  <img id="toggleRightSwitch" src="sidebar-right.svg" alt="右切替スイッチ" loading="lazy">
+
+  <!-- 紙面画像 -->
+  <div id="pageContainer">
+    <img id="pageImage" src="pages/1.png" alt="紙面画像" draggable="false" />
+  </div>
+
+  <!-- ページ切替ボタン -->
+  <img id="pageLeftBtn" src="page-left.svg" alt="前ページ" loading="lazy" />
+  <img id="pageRightBtn" src="page-right.svg" alt="次ページ" loading="lazy" />
+
+  <!-- iframe -->
+  <iframe id="contentIframe" src="" frameborder="0"></iframe>
+
+  <!-- 閉じるボタン -->
+  <img id="closeIframeBtn" src="close.svg" alt="閉じる" loading="lazy" />
 </div>
 
 <script>
+  const sidebarLeft = document.getElementById('sidebarLeft');
+  const sidebarRight = document.getElementById('sidebarRight');
+  const toggleLeftSwitch = document.getElementById('toggleLeftSwitch');
+  const toggleRightSwitch = document.getElementById('toggleRightSwitch');
+  const pageImage = document.getElementById('pageImage');
+  const pageContainer = document.getElementById('pageContainer');
+  const pageLeftBtn = document.getElementById('pageLeftBtn');
+  const pageRightBtn = document.getElementById('pageRightBtn');
+  const contentIframe = document.getElementById('contentIframe');
+  const closeIframeBtn = document.getElementById('closeIframeBtn');
+
+  const urls = {
+    yourei: 'https://tsnh-ex.web.app/',
+    digitalMap: 'https://sw111.tsho.jp/07jk/nh/dm/index.html'
+  };
+
   let currentPage = 1;
   const maxPage = 200;
+
   let scale = 1;
   let posX = 0;
   let posY = 0;
-  let toolboxMode = false;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let isDragging = false;
 
-  const mainImage = document.getElementById('mainImage');
-  const btnLeft = document.getElementById('btnLeft');
-  const btnRight = document.getElementById('btnRight');
-  const imageContainer = document.getElementById('imageContainer');
+  // localStorageからサイドバー位置を読み込み
+  function loadSidebarPosition() {
+    const pos = localStorage.getItem('sidebarPosition');
+    if (pos === 'right') {
+      sidebarLeft.style.display = 'none';
+      sidebarRight.style.display = 'flex';
+      toggleLeftSwitch.style.display = 'block';
+      toggleRightSwitch.style.display = 'none';
+    } else {
+      // left or default
+      sidebarLeft.style.display = 'flex';
+      sidebarRight.style.display = 'none';
+      toggleLeftSwitch.style.display = 'none';
+      toggleRightSwitch.style.display = 'block';
+    }
+  }
 
-  const normalButtons = document.getElementById('normalButtons');
-  const zoomButtons = document.getElementById('zoomButtons');
+  // localStorageにサイドバー位置保存
+  function saveSidebarPosition(pos) {
+    localStorage.setItem('sidebarPosition', pos);
+  }
 
-  const returnLeft = document.getElementById('returnLeft');
-  const returnRight = document.getElementById('returnRight');
+  toggleRightSwitch.addEventListener('click', () => {
+    sidebarLeft.style.display = 'none';
+    sidebarRight.style.display = 'flex';
+    toggleRightSwitch.style.display = 'none';
+    toggleLeftSwitch.style.display = 'block';
+    saveSidebarPosition('right');
+  });
 
-  const clickAreas = [
-    document.getElementById('clickArea1'),
-    document.getElementById('clickArea2'),
-    document.getElementById('clickArea3'),
-    document.getElementById('clickArea4'),
-    document.getElementById('clickArea5'),
-    document.getElementById('clickArea6'),
-  ];
+  toggleLeftSwitch.addEventListener('click', () => {
+    sidebarRight.style.display = 'none';
+    sidebarLeft.style.display = 'flex';
+    toggleLeftSwitch.style.display = 'none';
+    toggleRightSwitch.style.display = 'block';
+    saveSidebarPosition('left');
+  });
 
-  // ページ切り替えボタン
-  btnLeft.addEventListener('click', () => {
-    if(toolboxMode) return;
+  // --- ページ画像＆操作関連（省略せず載せる） ---
+
+  // ページ画像更新
+  function updatePageImage() {
+    pageImage.src = `pages/${currentPage}.png`;
+  }
+
+  // 拡大縮小反映
+  function applyTransform() {
+    pageImage.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
+  }
+
+  // ドラッグ開始
+  pageImage.addEventListener('mousedown', e => {
+    if (scale <= 1) return;
+    isDragging = true;
+    dragStartX = e.clientX - posX;
+    dragStartY = e.clientY - posY;
+    pageImage.style.cursor = 'grabbing';
+  });
+
+  window.addEventListener('mouseup', () => {
+    isDragging = false;
+    pageImage.style.cursor = 'grab';
+  });
+
+  window.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    posX = e.clientX - dragStartX;
+    posY = e.clientY - dragStartY;
+    applyTransform();
+  });
+
+  // タッチ対応
+  pageImage.addEventListener('touchstart', e => {
+    if (scale <= 1) return;
+    const touch = e.touches[0];
+    isDragging = true;
+    dragStartX = touch.clientX - posX;
+    dragStartY = touch.clientY - posY;
+  });
+
+  window.addEventListener('touchend', () => {
+    isDragging = false;
+  });
+
+  window.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    const touch = e.touches[0];
+    posX = touch.clientX - dragStartX;
+    posY = touch.clientY - dragStartY;
+    applyTransform();
+  });
+
+  // ページ切替
+  pageLeftBtn.addEventListener('click', () => {
     if(currentPage > 1) {
       currentPage--;
-      updatePage();
+      updatePageImage();
+      resetZoomAndPos();
     }
   });
-  btnRight.addEventListener('click', () => {
-    if(toolboxMode) return;
+  pageRightBtn.addEventListener('click', () => {
     if(currentPage < maxPage) {
       currentPage++;
-      updatePage();
+      updatePageImage();
+      resetZoomAndPos();
     }
   });
 
-  function updatePage() {
-    mainImage.src = `pages/${currentPage}.png`;
+  // 拡大縮小リセット
+  function resetZoomAndPos() {
     scale = 1;
     posX = 0;
     posY = 0;
     applyTransform();
-    removeHighlight();
-    disableClickAreas();  // 本誌ページならクリックエリアは無効化
   }
 
-  function removeHighlight() {
-    btnLeft.classList.remove('highlight');
-    btnRight.classList.remove('highlight');
+  // サイドバーのボタンクリック処理
+  function handleSidebarClick(action) {
+    function closeIframe() {
+      contentIframe.style.display = 'none';
+      closeIframeBtn.style.display = 'none';
+      pageContainer.style.display = 'block';
+      resetZoomAndPos();
+    }
+
+    switch(action) {
+      case 'zoomIn':
+        scale = Math.min(scale + 0.4, 3);
+        applyTransform();
+        break;
+      case 'zoomOut':
+        scale = Math.max(scale - 0.4, 0.4);
+        if(scale <= 1) resetZoomAndPos();
+        else applyTransform();
+        break;
+      case 'resetZoom':
+        resetZoomAndPos();
+        break;
+      case 'keySentences':
+        window.location.href = 'key-sentences.html';
+        break;
+      case 'yourei':
+        pageContainer.style.display = 'none';
+        contentIframe.src = urls.yourei;
+        contentIframe.style.display = 'block';
+        closeIframeBtn.style.display = 'block';
+        break;
+      case 'digitalMap':
+        pageContainer.style.display = 'none';
+        contentIframe.src = urls.digitalMap;
+        contentIframe.style.display = 'block';
+        closeIframeBtn.style.display = 'block';
+        break;
+      case 'originalCard':
+        pageContainer.style.display = 'none';
+        contentIframe.src = 'https://digibook.tokyo-shoseki.co.jp/sample/nh/contents/originalcard/index.html?g=2';
+        contentIframe.style.display = 'block';
+        closeIframeBtn.style.display = 'block';
+        break;
+      case 'toc':
+        // 何もしない
+        break;
+    }
   }
 
-  // クリックポイントURLマップ
-  const clickPointUrls = {
-    clickArea1: 'https://sw121.tsho.jp/07jk/nh/1/#e',
-    clickArea2: 'https://sw121.tsho.jp/07jk/nh/2/#e',
-    clickArea3: 'https://sw121.tsho.jp/07jk/nh/3/#e',
-    clickArea4: 'https://sw111.tsho.jp/07jk/nh/db/d/#03',
-    clickArea5: 'https://digibook.tokyo-shoseki.co.jp/sample/nh/c1/top/index.html?g=1',
-    clickArea6: 'https://digibook.tokyo-shoseki.co.jp/sample/nh/c2/top/index.html?g=2',
-  };
-
-  Object.entries(clickPointUrls).forEach(([id, url]) => {
-    const el = document.getElementById(id);
-    if(el) {
-      el.addEventListener('click', () => {
-        window.open(url, '_blank');
+  // サイドバー共通イベント登録
+  function addSidebarListeners(sidebar) {
+    const buttons = sidebar.querySelectorAll('.sidebarItem');
+    buttons.forEach(btn => {
+      if(btn.classList.contains('disabled')) return;
+      btn.addEventListener('click', () => {
+        const action = btn.getAttribute('data-action');
+        handleSidebarClick(action);
       });
-    }
-  });
-
-  // クリックエリア有効化・無効化
-  function enableClickAreas() {
-    clickAreas.forEach(el => {
-      if(!el) return;
-      el.style.pointerEvents = 'auto';
-      el.style.cursor = 'pointer';
-    });
-  }
-  function disableClickAreas() {
-    clickAreas.forEach(el => {
-      if(!el) return;
-      el.style.pointerEvents = 'none';
-      el.style.cursor = 'default';
     });
   }
 
-  // toolboxモード戻るボタン表示切替
-  function showReturnButtons(show) {
-    returnLeft.style.display = show ? 'block' : 'none';
-    returnRight.style.display = show ? 'block' : 'none';
-  }
+  addSidebarListeners(sidebarLeft);
+  addSidebarListeners(sidebarRight);
 
-  // toolbox表示切替
-  const btnContentCollection = document.getElementById('btnContentCollection');
-  btnContentCollection.addEventListener('click', () => {
-    toolboxMode = true;
-    mainImage.src = 'pages/toolbox.png';
-    btnLeft.style.display = 'none';
-    btnRight.style.display = 'none';
-    imageContainer.style.left = '36.6px';
-    imageContainer.style.top = '0.3px';
-    imageContainer.style.width = '1679.6px';
-    imageContainer.style.height = '1080px';
-    scale = 1;
-    posX = 0;
-    posY = 0;
-    applyTransform();
-    showReturnButtons(true);
-    enableClickAreas();
+  // 閉じるボタン処理
+  closeIframeBtn.addEventListener('click', () => {
+    contentIframe.style.display = 'none';
+    closeIframeBtn.style.display = 'none';
+    pageContainer.style.display = 'block';
+    resetZoomAndPos();
   });
 
-  returnLeft.addEventListener('click', restoreDefaultView);
-  returnRight.addEventListener('click', restoreDefaultView);
-
-  function restoreDefaultView() {
-    toolboxMode = false;
-    mainImage.src = `pages/${currentPage}.png`;
-    btnLeft.style.display = 'block';
-    btnRight.style.display = 'block';
-    imageContainer.style.left = '115.3px';
-    imageContainer.style.top = '0.3px';
-    imageContainer.style.width = '1562.66px';
-    imageContainer.style.height = '1080px';
-    scale = 1;
-    posX = 0;
-    posY = 0;
-    applyTransform();
-    showReturnButtons(false);
-    disableClickAreas();
-  }
-
-  // 拡大・パン用変数・関数
-  let isDragging = false;
-  let dragStartX, dragStartY;
-  let imgStartX, imgStartY;
-
-  function applyTransform() {
-    mainImage.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
-  }
-
-  function startDrag(x, y) {
-    if(scale <= 1) return; // 拡大時のみパン有効
-    isDragging = true;
-    dragStartX = x;
-    dragStartY = y;
-    imgStartX = posX;
-    imgStartY = posY;
-    imageContainer.classList.add('grabbing');
-  }
-  function onDrag(x, y) {
-    if(!isDragging) return;
-    let dx = x - dragStartX;
-    let dy = y - dragStartY;
-    posX = imgStartX + dx;
-    posY = imgStartY + dy;
-
-    // 画像のはみ出し制限（ざっくり）
-    const maxX = 0;
-    const maxY = 0;
-    const minX = imageContainer.clientWidth - mainImage.clientWidth * scale;
-    const minY = imageContainer.clientHeight - mainImage.clientHeight * scale;
-    if(posX > maxX) posX = maxX;
-    if(posY > maxY) posY = maxY;
-    if(posX < minX) posX = minX;
-    if(posY < minY) posY = minY;
-
-    applyTransform();
-  }
-  function endDrag() {
-    isDragging = false;
-    imageContainer.classList.remove('grabbing');
-  }
-
-  // マウスイベント
-  imageContainer.addEventListener('mousedown', (e) => {
-    e.preventDefault();
-    startDrag(e.clientX, e.clientY);
-  });
-  window.addEventListener('mousemove', (e) => {
-    if(!isDragging) return;
-    e.preventDefault();
-    onDrag(e.clientX, e.clientY);
-  });
-  window.addEventListener('mouseup', (e) => {
-    if(isDragging) {
-      e.preventDefault();
-      endDrag();
-    }
-  });
-
-  // タッチイベント
-  imageContainer.addEventListener('touchstart', (e) => {
-    if(e.touches.length === 1) {
-      const t = e.touches[0];
-      startDrag(t.clientX, t.clientY);
-    }
-  });
-  imageContainer.addEventListener('touchmove', (e) => {
-    if(!isDragging) return;
-    if(e.touches.length === 1) {
-      const t = e.touches[0];
-      onDrag(t.clientX, t.clientY);
-    }
-  });
-  imageContainer.addEventListener('touchend', (e) => {
-    if(isDragging) endDrag();
-  });
-
-  // 拡大・縮小ボタン処理
-  document.getElementById('btnZoom').addEventListener('click', () => {
-    normalButtons.style.display = 'none';
-    zoomButtons.style.display = 'block';
-  });
-  document.getElementById('btnZoomIn').addEventListener('click', () => {
-    scale += 0.4;
-    if(scale > 3) scale = 3;
-    applyTransform();
-  });
-  document.getElementById('btnZoomOut').addEventListener('click', () => {
-    scale -= 0.4;
-    if(scale < 1) {
-      scale = 1;
-      posX = 0;
-      posY = 0;
-    }
-    applyTransform();
-  });
-  document.getElementById('btnZoomReset').addEventListener('click', () => {
-    scale = 1;
-    posX = 0;
-    posY = 0;
-    applyTransform();
-  });
-  document.getElementById('btnZoomClose').addEventListener('click', () => {
-    zoomButtons.style.display = 'none';
-    normalButtons.style.display = 'block';
-    scale = 1;
-    posX = 0;
-    posY = 0;
-    applyTransform();
-  });
-
-  // 印刷ボタン
-  document.getElementById('btnPrint').addEventListener('click', () => {
-    window.print();
-  });
-
-  // リサイズ処理（親コンテナのスケーリングと中央寄せ）
+  // リサイズ処理
   function resizeContainer() {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const aspectRatio = 1920 / 1080;
-    let scaleRatio;
-    let marginLeft = 0;
-    let marginTop = 0;
+    const baseWidth = 1920;
+    const baseHeight = 1080;
+    const aspectRatio = baseWidth / baseHeight;
 
+    let scaleFactor;
     if (vw / vh > aspectRatio) {
-      scaleRatio = vh / 1080;
-      marginLeft = (vw - 1920 * scaleRatio) / 2;
+      scaleFactor = vh / baseHeight;
     } else {
-      scaleRatio = vw / 1920;
-      marginTop = (vh - 1080 * scaleRatio) / 2;
+      scaleFactor = vw / baseWidth;
     }
 
     const parent = document.getElementById('parentContainer');
-    parent.style.transform = `scale(${scaleRatio})`;
-    parent.style.marginLeft = `${marginLeft}px`;
-    parent.style.marginTop = `${marginTop}px`;
+    parent.style.transform = `translate(-50%, -50%) scale(${scaleFactor})`;
   }
-
   window.addEventListener('resize', resizeContainer);
   window.addEventListener('load', () => {
+    loadSidebarPosition();
     resizeContainer();
-    updatePage();
-    disableClickAreas();
   });
+
+  // 初期化
+  updatePageImage();
+  applyTransform();
 </script>
 
 </body>
