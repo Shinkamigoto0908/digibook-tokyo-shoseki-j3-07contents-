@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Key Sentences解説動画</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100vh; width: 100vw;
+      font-family: "メイリオ", meiryo, sans-serif;
+      background: #fffff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #parentContainer {
+      position: absolute;
+      width: 1920px;
+      height: 1080px;
+      background: #fff;
+      left: 50%;
+      top: 50%;
+      transform-origin: 50% 50%;
+      transform: translate(-50%, -50%) scale(1);
+      overflow: visible;
+    }
+
+    .sidebar {
+      position: absolute;
+      top: 0;
+      width: 97.4px;
+      height: 1080px;
+      background: #cacaca; /* ここがサイドバーの色 */
+      box-sizing: border-box;
+      padding-top: 13px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1100;
+    }
+
+    #sidebarLeft { left: 0; }
+    #sidebarRight { right: 0; }
+
+    .sidebarItem {
+      width: 71px;
+      height: 71px;
+      margin-bottom: 13px;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.15));
+      position: relative;
+    }
+
+    .sidebarItem img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .sidebarItem.disabled img {
+      filter: grayscale(100%) brightness(70%);
+      cursor: default;
+    }
+
+    #grayZoneLeft, #grayZoneRight {
+      position: absolute;
+      top: 0;
+      width: 97.4px;
+      height: 1080px;
+      background-color: #808080; /* ここがサイドバー隣接ゾーンの色 */
+      z-index: 1050;
+    }
+
+    #grayZoneLeft { left: 97.4px; }
+    #grayZoneRight { right: 97.4px; }
+
+    #toggleSwitch {
+      position: fixed;
+      top: 496.8px;
+      width: 30.8px;
+      height: 86.4px;
+      cursor: pointer;
+      z-index: 1200;
+    }
+
+    #closeBtn {
+      position: absolute;
+      width: 46.8px;
+      height: 46.8px;
+      left: 1670px;
+      top: 6.5px;
+      cursor: pointer;
+      z-index: 1300;
+    }
+
+    .gradeSelector {
+      position: absolute;
+      width: 97.4px;
+      height: 198.5px;
+      border-radius: 10px;
+      padding-top: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      user-select: none;
+      z-index: 2000;
+      background: white;
+    }
+
+    #gradeSelectorRight {
+      right: 110px;
+      top: 72.2px;
+    }
+
+    #gradeSelectorLeft {
+      left: 110px;
+      top: 72.2px;
+      display: none;
+    }
+
+    .gradeBtn {
+      width: 84px;
+      height: 51.9px;
+      border: none;
+      border-radius: 6px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .gradeBtn.selected {
+      background-color: #808080;
+      color: white;
+      box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    }
+
+    .gradeBtn.unselected {
+      background-color: white;
+      color: #808080;
+      box-shadow: 0 0 5px rgba(0,0,0,0.15);
+    }
+
+    /* 画像スクロール用コンテナ */
+    #imageScrollContainer {
+      position: absolute;
+      left: 219.5px;
+      top: 79.3px;
+      width: 1484.5px;
+      height: 1007px; /* 画面のほぼ下まで */
+      overflow-y: auto;
+      overflow-x: hidden;
+      border-radius: 0; /* 枠なし */
+      background-color: transparent;
+      -webkit-overflow-scrolling: touch;
+      user-select: none;
+      -webkit-user-drag: none;
+      z-index: 500;
+    }
+
+    #imageScrollContainer::-webkit-scrollbar {
+      width: 8px;
+    }
+    #imageScrollContainer::-webkit-scrollbar-thumb {
+      background-color: rgba(128, 128, 128, 0.5);
+      border-radius: 4px;
+    }
+
+    #ksImage {
+      width: 100%;
+      height: auto;
+      display: block;
+      user-select: none;
+      pointer-events: none;
+      -webkit-user-drag: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-drag: none;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="parentContainer">
+
+    <!-- 左サイドバー -->
+    <div id="sidebarLeft" class="sidebar">
+      <button class="sidebarItem" data-action="zoomIn"><img src="01.svg" alt="拡大" loading="lazy"></button>
+      <button class="sidebarItem" data-action="zoomOut"><img src="02.svg" alt="縮小" loading="lazy"></button>
+      <button class="sidebarItem" data-action="resetZoom"><img src="03.svg" alt="100%" loading="lazy"></button>
+      <button class="sidebarItem disabled" data-action="keySentences"><img src="04.svg" alt="Key Sentences" loading="lazy"></button>
+      <button class="sidebarItem disabled" data-action="yourei"><img src="05.svg" alt="用例辞典" loading="lazy"></button>
+      <button class="sidebarItem disabled" data-action="digitalMap"><img src="06.svg" alt="デジタルマップ" loading="lazy"></button>
+      <button class="sidebarItem disabled" data-action="originalCard"><img src="07.svg" alt="オリジナル絵カード" loading="lazy"></button>
+      <button class="sidebarItem disabled" data-action="toc"><img src="08.svg" alt="目次" loading="lazy"></button>
+    </div>
+    <div id="grayZoneLeft"></div>
+
+    <!-- 右サイドバー -->
+    <div id="sidebarRight" class="sidebar" style="display:none;">
+      <button class="sidebarItem" data-action="zoomIn"><img src="01.svg" alt="拡大" loading="lazy"></button>
+      <button class="sidebarItem" data-action="zoomOut"><img src="02.svg" alt="縮小" loading="lazy"></button>
+      <button class="sidebarItem" data-action="resetZoom"><img src="03.svg" alt="100%" loading="lazy"></button>
+      <button class="sidebarItem disabled" data-action="keySentences"><img src="04.svg" alt="Key Sentences" loading="lazy"></button>
+      <button class="sidebarItem disabled" data-action="yourei"><img src="05.svg" alt="用例辞典" loading="lazy"></button>
+      <button class="sidebarItem disabled" data-action="digitalMap"><img src="06.svg" alt="デジタルマップ" loading="lazy"></button>
+      <button class="sidebarItem disabled" data-action="originalCard"><img src="07.svg" alt="オリジナル絵カード" loading="lazy"></button>
+      <button class="sidebarItem disabled" data-action="toc"><img src="08.svg" alt="目次" loading="lazy"></button>
+    </div>
+    <div id="grayZoneRight" style="display:none;"></div>
+
+    <!-- 切替スイッチ -->
+    <img id="toggleSwitch" src="sidebar-right.svg" alt="切替スイッチ" />
+
+    <!-- 閉じるボタン -->
+    <img id="closeBtn" src="close.svg" alt="閉じる" />
+
+    <!-- 学年選択 -->
+    <div id="gradeSelectorRight" class="gradeSelector">
+      <button class="gradeBtn unselected" data-grade="1">1年</button>
+      <button class="gradeBtn unselected" data-grade="2">2年</button>
+      <button class="gradeBtn selected" data-grade="3">3年</button>
+    </div>
+    <div id="gradeSelectorLeft" class="gradeSelector" style="display:none;">
+      <button class="gradeBtn unselected" data-grade="1">1年</button>
+      <button class="gradeBtn unselected" data-grade="2">2年</button>
+      <button class="gradeBtn selected" data-grade="3">3年</button>
+    </div>
+
+    <!-- 画像表示エリア（スクロール可能） -->
+    <div id="imageScrollContainer">
+      <img id="ksImage" src="ks-3.png" alt="Key Sentences 3年" draggable="false" />
+    </div>
+
+  </div>
+
+  <script>
+    const sidebarLeft = document.getElementById('sidebarLeft');
+    const sidebarRight = document.getElementById('sidebarRight');
+    const grayZoneLeft = document.getElementById('grayZoneLeft');
+    const grayZoneRight = document.getElementById('grayZoneRight');
+    const toggleSwitch = document.getElementById('toggleSwitch');
+    const closeBtn = document.getElementById('closeBtn');
+
+    const gradeSelectorLeft = document.getElementById('gradeSelectorLeft');
+    const gradeSelectorRight = document.getElementById('gradeSelectorRight');
+    const gradeBtnsLeft = gradeSelectorLeft.querySelectorAll('.gradeBtn');
+    const gradeBtnsRight = gradeSelectorRight.querySelectorAll('.gradeBtn');
+
+    const STORAGE_KEY = 'sidebarPosition';
+    let isLeft;
+
+    function updateLayout() {
+      if (isLeft) {
+        sidebarLeft.style.display = 'flex';
+        grayZoneLeft.style.display = 'block';
+        sidebarRight.style.display = 'none';
+        grayZoneRight.style.display = 'none';
+        gradeSelectorLeft.style.display = 'flex';
+        gradeSelectorRight.style.display = 'none';
+        toggleSwitch.style.left = '';
+        toggleSwitch.style.right = '0px';
+        toggleSwitch.src = 'sidebar-right.svg';
+        toggleSwitch.style.display = 'block';
+      } else {
+        sidebarLeft.style.display = 'none';
+        grayZoneLeft.style.display = 'none';
+        sidebarRight.style.display = 'flex';
+        grayZoneRight.style.display = 'block';
+        gradeSelectorLeft.style.display = 'none';
+        gradeSelectorRight.style.display = 'flex';
+        toggleSwitch.style.right = '';
+        toggleSwitch.style.left = '0px';
+        toggleSwitch.src = 'sidebar-left.svg';
+        toggleSwitch.style.display = 'block';
+      }
+      localStorage.setItem(STORAGE_KEY, isLeft ? 'left' : 'right');
+    }
+
+    function syncGradeSelection(selectedGrade) {
+      [gradeBtnsLeft, gradeBtnsRight].forEach(btns => {
+        btns.forEach(btn => {
+          btn.classList.toggle('selected', btn.dataset.grade === selectedGrade);
+          btn.classList.toggle('unselected', btn.dataset.grade !== selectedGrade);
+        });
+      });
+    }
+
+    // 初期選択は3年
+    function selectGrade(grade) {
+      syncGradeSelection(grade);
+      // ここで画像の切り替えとか他の処理もできるで
+      // いまは3年の画像だけ表示してるから特になし
+      console.log(`${grade}年が選択されたで`);
+    }
+
+    function addGradeBtnListeners(btns) {
+      btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const grade = btn.dataset.grade;
+          selectGrade(grade);
+        });
+      });
+    }
+
+    addGradeBtnListeners(gradeBtnsLeft);
+    addGradeBtnListeners(gradeBtnsRight);
+
+    toggleSwitch.addEventListener('click', () => {
+      isLeft = !isLeft;
+      updateLayout();
+    });
+
+    closeBtn.addEventListener('click', () => {
+      window.location.href = 'shinpen-nh-index.html';
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      isLeft = (saved !== 'right');
+      updateLayout();
+      selectGrade('3'); // 初期は3年
+    });
+
+    // 画像のドラッグ選択禁止
+    const ksImage = document.getElementById('ksImage');
+    ksImage.addEventListener('mousedown', e => {
+      e.preventDefault();
+    });
+
+    function resizeContainer() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const scale = Math.min(vw / 1920, vh / 1080);
+      document.getElementById('parentContainer').style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    window.addEventListener('resize', resizeContainer);
+    window.addEventListener('load', resizeContainer);
+  </script>
+</body>
+</html>
